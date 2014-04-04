@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.http.RouteMatcher;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
@@ -128,6 +129,17 @@ public class Server extends Verticle {
         user.rates.put(movie, parseInt(userRate.getString("rate")));
         req.response().setStatusCode(201).end();
       });
+    });
+    
+    route.get("/rates/:userid1", req -> {
+      User user1 = findUserById(parseInt(req.params().get("userid1")), users).get();
+      if (user1.rates == null) {
+        req.response().end("{}");
+        return;
+      }
+      JsonObject json = new JsonObject();
+      user1.rates.forEach((user2, rate) -> json.putNumber(Integer.toString(user2._id), rate));
+      req.response().end(json.encode());
     });
     
     route.get("/users/share/:userid1/:userid2", req -> {
