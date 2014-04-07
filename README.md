@@ -15,7 +15,7 @@ Setup Vertx shell script
 ---
 Vertx uses the vertx shell script, so you have to put it in your path
 ```
-export PATH=/home/forax/git/movie_buddy/deps/vert.x-2.1RC2/bin:$PATH
+export PATH=[PATH TO MOVIE BUDDY]/deps/vert.x-2.1RC2/bin:$PATH
 ```
 
 
