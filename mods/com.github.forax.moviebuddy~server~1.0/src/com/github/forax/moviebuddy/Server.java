@@ -19,12 +19,11 @@ import java.util.regex.Pattern;
 
 import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.http.RouteMatcher;
-import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
 public class Server extends Verticle {
-  private final static String FILES_PREFIX = "../..";
+  private final static String FILES_PREFIX = ".";
   
   @Override
   public void start() {
