@@ -1,12 +1,13 @@
 package com.github.forax.moviebuddy;
 
 import static com.github.forax.moviebuddy.JsonStream.asStream;
+import static java.lang.Integer.parseInt;
+import static java.lang.Math.sqrt;
+import static java.lang.System.getProperty;
 import static java.nio.file.Paths.get;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static java.lang.Integer.parseInt;
 import static java.util.regex.Pattern.compile;
-import static java.lang.Math.sqrt;
 import static com.github.forax.moviebuddy.User.findUserById;
 import static com.github.forax.moviebuddy.Movie.findMovieById;
 
@@ -17,8 +18,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.vertx.java.core.file.impl.PathResolver;
 import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.http.RouteMatcher;
+import org.vertx.java.core.impl.DefaultContext;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
@@ -27,11 +30,15 @@ public class Server extends Verticle {
   
   @Override
   public void start() {
+    // I know this is wrong, but it seems there is no public API for that
+    DefaultContext context = (DefaultContext)vertx.currentContext();
+    PathResolver pathResolver = context.getPathResolver();
+    
     List<Movie> movies;
     List<User> users;
     try {
-      movies = asStream(get("db/movies.json")).map(Movie::parse).collect(toList());
-      users = asStream(get("db/users.json")).map(User::parse).collect(toList());
+      movies = asStream(pathResolver.resolve(get("db/movies.json"))).map(Movie::parse).collect(toList());
+      users = asStream(pathResolver.resolve(get("db/users.json"))).map(User::parse).collect(toList());
     } catch (IOException e) {
       throw new IOError(e);
     }
@@ -172,7 +179,8 @@ public class Server extends Verticle {
       req.response().end(Double.toString(1.0 / (1.0 + sqrt(sum_of_squares[0]))));
     });
     
-    server.requestHandler(route).listen(3000, "localhost");
-    container.logger().info("Listening on 3000 ...");
+    int port = parseInt(getProperty("app.port", "3000"));
+    server.requestHandler(route).listen(port, "localhost");
+    container.logger().info("Listening on " + port + " ...");
   }
 }
