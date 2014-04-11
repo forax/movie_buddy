@@ -51,10 +51,13 @@ public class Server extends Verticle {
     RouteMatcher route = new RouteMatcher();
     
     route.noMatch(req -> {
+      container.logger().info("request for " + req.path());
+      
       String path = req.path();
       if (path.equals("/") || path.contains("..")) {
         path = "/index.html";
       }
+      
       req.response().sendFile(FILES_PREFIX + "/public/" + path);
     });
     
@@ -180,7 +183,7 @@ public class Server extends Verticle {
     });
     
     int port = parseInt(getProperty("app.port", "3000"));
-    server.requestHandler(route).listen(port, "localhost");
+    server.requestHandler(route).listen(port);
     container.logger().info("Listening on " + port + " ...");
   }
 }

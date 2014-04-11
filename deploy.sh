@@ -1,0 +1,1 @@
+bees app:deploy -a movie-buddy-vertx -Rjava_version=http://cb-s3-dist.s3.amazonaws.com/java/openjdk/jdk-8-ea-bin-b132-linux-x64-04_mar_2014.tar.gz -t vertx2 mods/com.github.forax~moviebuddy~1.0/
