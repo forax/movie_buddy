@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0"/>
 	<classpathentry kind="lib" path="deps/vert.x-2.1RC2/lib/jackson-core-2.2.2.jar"/>
 	<classpathentry kind="lib" path="deps/vert.x-2.1RC2/lib/jackson-databind-2.2.2.jar"/>
-	<classpathentry kind="lib" path="deps/vert.x-2.1RC2/lib/vertx-core-2.1RC2.jar"/>
+	<classpathentry kind="lib" path="deps/vert.x-2.1RC2/lib/vertx-core-2.1RC2.jar" sourcepath="/home/forax/git/vert.x/vertx-core/src/main/java"/>
 	<classpathentry kind="lib" path="deps/vert.x-2.1RC2/lib/vertx-platform-2.1RC2.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

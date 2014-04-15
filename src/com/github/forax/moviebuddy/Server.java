@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 import java.util.regex.Pattern;
 
 import org.vertx.java.core.file.impl.PathResolver;
@@ -130,11 +131,11 @@ public class Server extends Verticle {
       req.bodyHandler(buffer -> {
         String body = buffer.getString(0, buffer.length());
         JsonObject userRate = new JsonObject(body);
-        User user = findUserById(parseInt(userRate.getString("userId")), users).get();
-        Movie movie = findMovieById(parseInt(userRate.getString("movieId")), movies).get();
+        User user = findUserById(userRate.getInteger("userId"), users).get();
+        Movie movie = findMovieById(userRate.getInteger("movieId"), movies).get();
         if (user.rates == null) user.rates = new HashMap<>();
-        user.rates.put(movie, parseInt(userRate.getString("rate")));
-        req.response().putHeader("location", "/rates/"+user._id).setStatusCode(301).end();
+        user.rates.put(movie, userRate.getInteger("rate"));
+        req.response().putHeader("location", "/rates/" + user._id).setStatusCode(301).end();
       });
     });
     
