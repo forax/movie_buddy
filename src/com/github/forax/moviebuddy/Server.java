@@ -13,6 +13,7 @@ import static com.github.forax.moviebuddy.Movie.findMovieById;
 
 import java.io.IOError;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,6 +47,9 @@ public class Server extends Verticle {
     // sort for binary search
     movies.sort(null);
     users.sort(null);
+    
+    // pre-fill with some votes
+    initPredefinedVotes(movies, users);
     
     HttpServer server = vertx.createHttpServer();
     RouteMatcher route = new RouteMatcher();
@@ -183,5 +187,39 @@ public class Server extends Verticle {
     int port = parseInt(getProperty("app.port", "3000"));
     server.requestHandler(route).listen(port);
     container.logger().info("Listening on " + port + " ...");
+  }
+  
+  private static void initPredefinedVotes(List<Movie> movies, List<User> users) {
+    Arrays.stream(new int[][] {
+        /*userId      movieId       rate*/
+        {3022,        772,          2 },
+        {3022,        24 ,          10},
+        {3022,        482,          4 },
+        {3022,        302,          7 },
+        {3022,        680,          6 },
+        {9649,        772,          2 },
+        {9649,        24 ,          8 },
+        {9649,        482,          9 },
+        {9649,        302,          3 },
+        {9649,        556,          8 },
+        {2349,        453,          7 },
+        {2349,        461,          9 },
+        {2349,        258,          10},
+        {2349,        494,          9 },
+        {2349,        158,          4 },
+        { 496,        682,          4 },
+        { 496,        559,          7 },
+        { 496,        537,          4 },
+        { 496,        352,          3 },
+        { 496,        005,          9 },
+    }).forEach(votes -> {
+      int userId = votes[0];
+      int movieId = votes[1];
+      int rate = votes[2];
+      User user = findUserById(userId, users).get();
+      Movie movie = findMovieById(movieId, movies).get();
+      if (user.rates == null) user.rates = new HashMap<>();
+      user.rates.put(movie, rate);
+    });
   }
 }
